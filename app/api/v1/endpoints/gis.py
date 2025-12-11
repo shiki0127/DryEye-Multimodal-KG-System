@@ -7,7 +7,6 @@ from app.models.schemas.gis import EnvironmentData, YunnanRegion
 router = APIRouter()
 
 # ================= 配置区域 =================
-# TODO: 请替换为你申请的和风天气 API Key
 QWEATHER_API_KEY = "c0192dec310c478e8783cdd99680557d"
 
 # 和风天气 API 基础 URL (免费开发版使用 devapi)

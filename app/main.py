@@ -1,23 +1,36 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from app.core.config import settings
+from app.db.mongodb import connect_to_mongo, close_mongo_connection
+from app.db.neo4j import neo4j_db
+from app.api.v1.api import api_router
 
-# 以后这里会导入具体的路由
-# from app.api.v1.api import api_router
+# 定义生命周期事件：启动时连接数据库，关闭时断开
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # --- Startup ---
+    await connect_to_mongo()
+    neo4j_db.connect()
+    yield
+    # --- Shutdown ---
+    await close_mongo_connection()
+    neo4j_db.close()
 
 def create_application() -> FastAPI:
     application = FastAPI(
         title=settings.PROJECT_NAME,
         openapi_url=f"{settings.API_V1_STR}/openapi.json",
-        description="云南干眼症多模态智慧诊疗与知识图谱系统后端接口"
+        description="云南干眼症多模态智慧诊疗与知识图谱系统后端接口",
+        lifespan=lifespan  # 注册生命周期
     )
 
-    # 设置跨域请求 (CORS)，允许前端访问
+    # 设置跨域请求 (CORS)
     origins = [
         "http://localhost",
         "http://localhost:8080",
-        "http://localhost:3000", # 常见前端端口
-        "*"                      # 开发阶段允许所有
+        "http://localhost:3000",
+        "*"
     ]
 
     application.add_middleware(
@@ -28,8 +41,8 @@ def create_application() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # 注册路由 (暂时注释，等写好路由文件再开启)
-    # application.include_router(api_router, prefix=settings.API_V1_STR)
+    # 注册 API 路由
+    application.include_router(api_router, prefix=settings.API_V1_STR)
 
     return application
 
@@ -45,4 +58,7 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "ok", "db_mongo": "pending", "db_neo4j": "pending"}
+    return {
+        "status": "ok",
+        "app_name": settings.PROJECT_NAME
+    }

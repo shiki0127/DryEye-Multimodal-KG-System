@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     MONGODB_URL: str = "mongodb://localhost:27017"
     MONGODB_DB_NAME: str = "dryeye_db"
 
-    NEO4J_URI: str = "bolt://localhost:7687"
+    NEO4J_URI: str = "neo4j+ssc://5eb1ee46.databases.neo4j.io"
     NEO4J_USER: str = "neo4j"
-    NEO4J_PASSWORD: str = "password"
+    NEO4J_PASSWORD: str = "YXIT_gUOC2LatwJUdUFIYhUIAbd6kze4YJ9IXypwV8M"
 
     class Config:
         case_sensitive = True

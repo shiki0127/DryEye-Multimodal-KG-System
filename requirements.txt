@@ -7,5 +7,8 @@ pydantic>=2.0.0
 pydantic-settings>=2.0.0
 httpx>=0.24.1           # 用于请求外部气象API
 numpy>=1.24.0
+openai>=1.0.0            # 用于调用 DeepSeek (DeepSeek 接口兼容 OpenAI SDK)
+passlib[bcrypt]>=1.7.4   # 用于密码加密
+python-jose[cryptography]>=3.3.0 # 用于生成 JWT Token
 # torch, torchvision    # 后续添加 AI 依赖
 # opencv-python         # 后续添加图像处理依赖

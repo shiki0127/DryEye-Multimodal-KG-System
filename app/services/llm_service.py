@@ -33,7 +33,6 @@ class LLMService:
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                # 这是一个通用的 OpenAI 格式接口调用
                 response = await client.post(
                     f"{self.base_url}/chat/completions",
                     headers={
